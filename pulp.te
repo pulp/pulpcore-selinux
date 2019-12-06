@@ -1,0 +1,66 @@
+policy_module(pulp, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+type pulpcore_t;
+type pulpcore_exec_t;
+init_daemon_domain(pulpcore_t, pulpcore_exec_t)
+init_nnp_daemon_domain(pulpcore_t)
+
+type pulpcore_var_lib_t;
+files_type(pulpcore_var_lib_t)
+
+type pulpcore_var_run_t;
+files_pid_file(pulpcore_var_run_t)
+
+type pulpcore_tmp_t;
+files_tmp_file(pulpcore_tmp_t)
+
+########################################
+#
+# pulpcore_api local policy
+#
+allow pulpcore_t self:fifo_file rw_fifo_file_perms;
+allow pulpcore_t self:unix_stream_socket create_stream_socket_perms;
+allow pulpcore_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+allow pulpcore_t self:tcp_socket create_stream_socket_perms;
+allow pulpcore_t self:udp_socket create_stream_socket_perms;
+
+manage_dirs_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+manage_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+relabel_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+manage_lnk_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+files_var_lib_filetrans(pulpcore_t, pulpcore_var_lib_t, { dir file })
+
+manage_dirs_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
+manage_files_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
+files_pid_filetrans(pulpcore_t, pulpcore_var_run_t, { dir })
+
+manage_dirs_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
+manage_files_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
+relabel_files_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
+files_tmp_filetrans(pulpcore_t, pulpcore_tmp_t, { file dir })
+
+auth_use_nsswitch(pulpcore_t)
+
+corecmd_exec_bin(pulpcore_t)
+corecmd_exec_shell(pulpcore_t)
+
+corenet_tcp_bind_pulp_port(pulpcore_t)
+corenet_tcp_connect_postgresql_port(pulpcore_t)
+corenet_tcp_connect_redis_port(pulpcore_t)
+corenet_tcp_connect_http_port(pulpcore_t)
+
+fs_read_fusefs_files(pulpcore_t)
+fs_read_fusefs_symlinks(pulpcore_t)
+fs_getattr_xattr_fs(pulpcore_t)
+
+libs_exec_ldconfig(pulpcore_t)
+
+miscfiles_read_certs(pulpcore_t)
+
+sysnet_read_config(pulpcore_t)
+
