@@ -1,1 +1,22 @@
-## <summary></summary>
+## <summary>Platform for managing repositories of software packages</summary>
+
+########################################
+## <summary>
+##	Bind TCP sockets to the pulp port.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <infoflow type="none"/>
+#
+interface(`corenet_tcp_bind_pulp_port',`
+	gen_require(`
+		type pulp_port_t;
+	')
+
+	allow $1 pulp_port_t:tcp_socket name_bind;
+	
+')
+
