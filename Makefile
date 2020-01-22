@@ -1,5 +1,5 @@
 
-TARGETS?=pulp
+TARGETS?=pulpcore
 MODULES?=${TARGETS:=.pp.bz2}
 SHAREDIR?=/usr/share
 
