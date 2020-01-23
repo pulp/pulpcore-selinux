@@ -1,4 +1,4 @@
-policy_module(pulp_port, 1.0)
+policy_module(pulpcore_port, 1.0)
 
 gen_require(`
     attribute port_type;
@@ -6,4 +6,4 @@ gen_require(`
     attribute unreserved_port_type;
 ')
 
-type pulp_port_t, port_type, defined_port_type, unreserved_port_type;
+type pulpcore_port_t, port_type, defined_port_type, unreserved_port_type;

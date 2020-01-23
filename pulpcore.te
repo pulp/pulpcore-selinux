@@ -49,7 +49,7 @@ auth_use_nsswitch(pulpcore_t)
 corecmd_exec_bin(pulpcore_t)
 corecmd_exec_shell(pulpcore_t)
 
-corenet_tcp_bind_pulp_port(pulpcore_t)
+corenet_tcp_bind_pulpcore_port(pulpcore_t)
 corenet_tcp_connect_postgresql_port(pulpcore_t)
 corenet_tcp_connect_redis_port(pulpcore_t)
 corenet_tcp_connect_http_port(pulpcore_t)
