@@ -60,7 +60,7 @@ fs_getattr_xattr_fs(pulpcore_t)
 
 libs_exec_ldconfig(pulpcore_t)
 
-miscfiles_read_certs(pulpcore_t)
+miscfiles_read_generic_certs(pulpcore_t)
 
 sysnet_read_config(pulpcore_t)
 
