@@ -12,12 +12,12 @@
 ## </param>
 ## <infoflow type="none"/>
 #
-interface(`corenet_tcp_bind_pulp_port',`
+interface(`corenet_tcp_bind_pulpcore_port',`
 	gen_require(`
-		type pulp_port_t;
+		type pulpcore_port_t;
 	')
 
-	allow $1 pulp_port_t:tcp_socket name_bind;
+	allow $1 pulpcore_port_t:tcp_socket name_bind;
 
 ')
 

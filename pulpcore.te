@@ -1,4 +1,4 @@
-policy_module(pulp, 1.0.0)
+policy_module(pulpcore, 1.0.0)
 
 ########################################
 #
@@ -39,7 +39,7 @@ files_tmp_file(pulpcore_content_tmp_t)
 type pulpcore_tmpfs_t;
 files_tmpfs_file(pulpcore_api_t);
 
-#type pulp_port_t, port_type, defined_port_type;
+#type pulpcore_port_t, port_type, defined_port_type;
 
 ########################################
 #
