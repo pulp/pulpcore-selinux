@@ -1,0 +1,4 @@
+(typetransition init_t var_run_t dir "pulpcore-api" pulpcore_api_var_run_t)
+(typetransition init_t var_run_t dir "pulpcore-content" pulpcore_content_var_run_t)
+(typetransition init_t var_run_t dir "pulpcore-resource-manager" pulpcore_content_var_run_t)
+

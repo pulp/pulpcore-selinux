@@ -1,0 +1,3 @@
+(allow pulpcore_content_t fs_t (filesystem (getattr)))
+(allow pulpcore_content_t rhsmcertd_config_t (dir (search)))
+(allow pulpcore_content_t rhsmcertd_config_t (file (getattr ioctl open read)))

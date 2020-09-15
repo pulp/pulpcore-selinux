@@ -1,0 +1,32 @@
+policy_module(pulp_rq, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+type pulp_rq_t;
+type pulp_rq_exec_t;
+init_daemon_domain(pulp_rq_t, pulp_rq_exec_t)
+init_nnp_daemon_domain(pulp_rq_t)
+
+permissive pulp_rq_t;
+
+########################################
+#
+# pulp_rq local policy
+#
+allow pulp_rq_t self:fifo_file rw_fifo_file_perms;
+allow pulp_rq_t self:unix_stream_socket create_stream_socket_perms;
+
+#domain_use_interactive_fds(pulp_rq_t)
+#
+#files_read_etc_files(pulp_rq_t)
+#
+#miscfiles_read_localization(pulp_rq_t)
+
+#corecmd_exec_bin(pulpcore_t)
+#corecmd_exec_shell(pulpcore_t)
+
+corenet_tcp_connect_http_port(pulp_rq_t)
+corenet_tcp_connect_redis_port(pulp_rq_t)

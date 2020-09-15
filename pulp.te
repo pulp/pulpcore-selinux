@@ -5,62 +5,160 @@ policy_module(pulp, 1.0.0)
 # Declarations
 #
 
-type pulpcore_t;
-type pulpcore_exec_t;
-init_daemon_domain(pulpcore_t, pulpcore_exec_t)
-init_nnp_daemon_domain(pulpcore_t)
+type pulpcore_api_t;
+type pulpcore_api_exec_t;
+init_daemon_domain(pulpcore_api_t, pulpcore_api_exec_t)
+init_nnp_daemon_domain(pulpcore_api_t)
+permissive pulpcore_api_t;
 
-type pulpcore_var_lib_t;
-files_type(pulpcore_var_lib_t)
+type pulpcore_content_t;
+type pulpcore_content_exec_t;
+init_daemon_domain(pulpcore_content_t, pulpcore_content_exec_t)
+init_nnp_daemon_domain(pulpcore_content_t)
+permissive pulpcore_content_t;
 
-type pulpcore_var_run_t;
-files_pid_file(pulpcore_var_run_t)
+type pulpcore_etc_t;
+files_config_file(pulpcore_etc_t)
 
-type pulpcore_tmp_t;
-files_tmp_file(pulpcore_tmp_t)
+type pulpcore_api_var_lib_t;
+files_type(pulpcore_api_var_lib_t)
+type pulpcore_content_var_lib_t;
+files_type(pulpcore_content_var_lib_t)
+
+type pulpcore_api_var_run_t;
+files_pid_file(pulpcore_api_var_run_t)
+init_daemon_run_dir(pulpcore_api_var_run_t)
+type pulpcore_content_var_run_t;
+files_pid_file(pulpcore_content_var_run_t)
+
+type pulpcore_api_tmp_t;
+files_tmp_file(pulpcore_api_tmp_t)
+type pulpcore_content_tmp_t;
+files_tmp_file(pulpcore_content_tmp_t)
+
+type pulpcore_tmpfs_t;
+files_tmpfs_file(pulpcore_api_t);
+
+#type pulp_port_t, port_type, defined_port_type;
 
 ########################################
 #
-# pulpcore_api local policy
+# pulpcore_api and pulpcore_content local policy
 #
-allow pulpcore_t self:fifo_file rw_fifo_file_perms;
-allow pulpcore_t self:unix_stream_socket create_stream_socket_perms;
-allow pulpcore_t self:netlink_route_socket { create_socket_perms nlmsg_read };
-allow pulpcore_t self:tcp_socket create_stream_socket_perms;
-allow pulpcore_t self:udp_socket create_stream_socket_perms;
+allow pulpcore_content_t self:fifo_file rw_fifo_file_perms;
+allow pulpcore_content_t self:unix_stream_socket create_stream_socket_perms;
+allow pulpcore_content_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+allow pulpcore_content_t self:tcp_socket create_stream_socket_perms;
+allow pulpcore_content_t self:udp_socket create_stream_socket_perms;
 
-manage_dirs_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
-manage_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
-relabel_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
-manage_lnk_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
-files_var_lib_filetrans(pulpcore_t, pulpcore_var_lib_t, { dir file })
+allow pulpcore_api_t pulpcore_content_exec_t:file getattr;
+allow pulpcore_content_t pulpcore_api_exec_t:file getattr;
 
-manage_dirs_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
-manage_files_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
-files_pid_filetrans(pulpcore_t, pulpcore_var_run_t, { dir })
+manage_dirs_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+manage_files_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+#relabel_files_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+#manage_lnk_files_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+files_var_lib_filetrans(pulpcore_api_t, pulpcore_api_var_lib_t, { dir })
 
-manage_dirs_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
-manage_files_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
-relabel_files_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
-files_tmp_filetrans(pulpcore_t, pulpcore_tmp_t, { file dir })
+manage_dirs_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+manage_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+#relabel_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+#manage_lnk_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+files_var_lib_filetrans(pulpcore_content_t, pulpcore_content_var_lib_t, { dir })
 
-auth_use_nsswitch(pulpcore_t)
+# /dev/shm
+manage_files_pattern(pulpcore_api_t, pulpcore_tmpfs_t, pulpcore_tmpfs_t)
+fs_tmpfs_filetrans(pulpcore_api_t, pulpcore_tmpfs_t,  file )
+allow pulpcore_api_t pulpcore_tmpfs_t:file map;
 
-corecmd_exec_bin(pulpcore_t)
-corecmd_exec_shell(pulpcore_t)
+########################################
+#
+# pulpcore_api and pulpcore_content local policy
+#
+allow pulpcore_content_t self:fifo_file rw_fifo_file_perms;
+allow pulpcore_content_t self:unix_stream_socket create_stream_socket_perms;
+allow pulpcore_content_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+allow pulpcore_content_t self:tcp_socket create_stream_socket_perms;
+allow pulpcore_content_t self:udp_socket create_stream_socket_perms;
 
-corenet_tcp_bind_pulp_port(pulpcore_t)
-corenet_tcp_connect_postgresql_port(pulpcore_t)
-corenet_tcp_connect_redis_port(pulpcore_t)
-corenet_tcp_connect_http_port(pulpcore_t)
+# /var/lib
+manage_dirs_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+manage_files_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+relabel_files_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+#manage_lnk_files_pattern(pulpcore_api_t, pulpcore_api_var_lib_t, pulpcore_api_var_lib_t)
+files_var_lib_filetrans(pulpcore_api_t, pulpcore_api_var_lib_t, { dir })
 
-fs_read_fusefs_files(pulpcore_t)
-fs_read_fusefs_symlinks(pulpcore_t)
-fs_getattr_xattr_fs(pulpcore_t)
+manage_dirs_pattern(pulpcore_api_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+manage_files_pattern(pulpcore_api_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+relabel_files_pattern(pulpcore_api_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+#manage_lnk_files_pattern(pulpcore_api_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+#files_var_lib_filetrans(pulpcore_api_t, pulpcore_content_var_lib_t, { dir })
 
-libs_exec_ldconfig(pulpcore_t)
+list_dirs_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+read_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+relabel_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+#manage_lnk_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+read_lnk_files_pattern(pulpcore_content_t, pulpcore_content_var_lib_t, pulpcore_content_var_lib_t)
+files_var_lib_filetrans(pulpcore_content_t, pulpcore_content_var_lib_t, { dir })
 
-miscfiles_read_certs(pulpcore_t)
+#/run
+manage_dirs_pattern(pulpcore_api_t, pulpcore_api_var_run_t, pulpcore_api_var_run_t)
+manage_files_pattern(pulpcore_api_t, pulpcore_api_var_run_t, pulpcore_api_var_run_t)
+files_pid_filetrans(pulpcore_api_t, pulpcore_api_var_run_t, { file dir })
 
-sysnet_read_config(pulpcore_t)
+manage_dirs_pattern(pulpcore_content_t, pulpcore_content_var_run_t, pulpcore_content_var_run_t)
+manage_files_pattern(pulpcore_content_t, pulpcore_content_var_run_t, pulpcore_content_var_run_t)
+files_pid_filetrans(pulpcore_content_t, pulpcore_content_var_run_t, { file dir })
 
+#/tmp
+manage_dirs_pattern(pulpcore_api_t, pulpcore_api_tmp_t, pulpcore_api_tmp_t)
+manage_files_pattern(pulpcore_api_t, pulpcore_api_tmp_t, pulpcore_api_tmp_t)
+manage_lnk_files_pattern(pulpcore_api_t, pulpcore_api_tmp_t, pulpcore_api_tmp_t)
+relabel_files_pattern(pulpcore_api_t, pulpcore_api_tmp_t, pulpcore_api_tmp_t)
+files_tmp_filetrans(pulpcore_api_t, pulpcore_api_tmp_t, { file dir })
+
+manage_dirs_pattern(pulpcore_content_t, pulpcore_content_tmp_t, pulpcore_content_tmp_t)
+manage_files_pattern(pulpcore_content_t, pulpcore_content_tmp_t, pulpcore_content_tmp_t)
+relabel_files_pattern(pulpcore_content_t, pulpcore_content_tmp_t, pulpcore_content_tmp_t)
+files_tmp_filetrans(pulpcore_content_t, pulpcore_content_tmp_t, { file dir })
+
+# policy rules
+auth_use_nsswitch(pulpcore_api_t)
+auth_use_nsswitch(pulpcore_content_t)
+
+corecmd_exec_bin(pulpcore_api_t)
+corecmd_exec_shell(pulpcore_api_t)
+corecmd_exec_bin(pulpcore_content_t)
+corecmd_exec_shell(pulpcore_content_t)
+
+#corenet_tcp_bind_pulp_port(pulpcore_api_t)
+corenet_tcp_connect_http_port(pulpcore_api_t)
+corenet_tcp_connect_postgresql_port(pulpcore_api_t)
+corenet_tcp_connect_redis_port(pulpcore_api_t)
+corenet_tcp_connect_http_port(pulpcore_content_t)
+corenet_tcp_connect_postgresql_port(pulpcore_content_t)
+corenet_tcp_connect_redis_port(pulpcore_content_t)
+
+#fs_read_fusefs_files(pulpcore_api_t)
+#fs_read_fusefs_symlinks(pulpcore_api_t)
+
+fs_getattr_tmpfs(pulpcore_api_t)
+fs_getattr_xattr_fs(pulpcore_api_t)
+fs_getattr_xattr_fs(pulpcore_content_t)
+#fs_getattr_all_fs(pulpcore_api_t)
+#fs_getattr_all_fs(pulpcore_content_t)
+
+libs_exec_ldconfig(pulpcore_api_t)
+libs_exec_ldconfig(pulpcore_content_t)
+
+miscfiles_read_generic_certs(pulpcore_api_t)
+
+read_files_pattern(pulpcore_api_t, pulpcore_etc_t, pulpcore_etc_t)
+read_files_pattern(pulpcore_content_t, pulpcore_etc_t, pulpcore_etc_t)
+
+sysnet_read_config(pulpcore_api_t)
+
+optional_policy(`
+	kerberos_read_keytab(pulpcore_api_t)
+	kerberos_read_keytab(pulpcore_content_t)
+')

@@ -1,0 +1,3 @@
+(allow pulpcore_content_t unreserved_port_t (tcp_socket (name_bind)))
+(allow pulpcore_api_t unreserved_port_t (tcp_socket (name_connect)))
+

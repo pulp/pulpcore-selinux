@@ -1,4 +1,5 @@
-## <summary>Platform for managing repositories of software packages</summary>
+## <summary></summary>
+
 
 ########################################
 ## <summary>
@@ -17,6 +18,6 @@ interface(`corenet_tcp_bind_pulp_port',`
 	')
 
 	allow $1 pulp_port_t:tcp_socket name_bind;
-	
+
 ')
 

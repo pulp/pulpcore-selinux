@@ -1,0 +1,40 @@
+
+## <summary>policy for pulp_rq</summary>
+
+########################################
+## <summary>
+##	Execute pulp_rq_exec_t in the pulp_rq domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`pulp_rq_domtrans',`
+	gen_require(`
+		type pulp_rq_t, pulp_rq_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, pulp_rq_exec_t, pulp_rq_t)
+')
+
+######################################
+## <summary>
+##	Execute pulp_rq in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pulp_rq_exec',`
+	gen_require(`
+		type pulp_rq_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, pulp_rq_exec_t)
+')

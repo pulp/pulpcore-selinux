@@ -1,28 +1,22 @@
+# installation paths
+SHAREDIR := /usr/share/selinux
 
-TARGETS?=pulp
-MODULES?=${TARGETS:=.pp.bz2}
-SHAREDIR?=/usr/share
+AWK ?= gawk
+NAME ?= $(strip $(shell $(AWK) -F= '/^SELINUXTYPE/{ print $$2 }' /etc/selinux/config))
 
-all: ${TARGETS:=.pp.bz2}
+ifeq ($(MLSENABLED),)
+	MLSENABLED := 1
+endif
 
-%.pp.bz2: %.pp
-	@echo Compressing $^ -\> $@
-	bzip2 -9 $^
+ifeq ($(MLSENABLED),1)
+	NTYPE = mcs
+endif
 
-%.pp: %.te
-	make -f ${SHAREDIR}/selinux/devel/Makefile $@
+ifeq ($(NAME),mls)
+	NTYPE = mls
+endif
 
-clean:
-	rm -f *~  *.tc *.pp *.pp.bz2
-	rm -rf tmp *.tar.gz
+TYPE ?= $(NTYPE)
 
-man: install-policy
-	sepolicy manpage --path . --domain ${TARGETS}_t
-
-install-policy: all
-	semodule -i ${TARGETS}.pp.bz2
-
-install: man
-	install -D -m 644 ${TARGETS}.pp.bz2 ${DESTDIR}${SHAREDIR}/selinux/packages/pulp.pp.bz2
-	install -D -m 644 container.if ${DESTDIR}${SHAREDIR}/selinux/devel/include/services/pulp.if
-	install -D -m 644 container_selinux.8 ${DESTDIR}${SHAREDIR}/man/man8/
+HEADERDIR := $(SHAREDIR)/devel/include
+include $(HEADERDIR)/Makefile

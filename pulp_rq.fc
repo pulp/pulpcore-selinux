@@ -1,0 +1,2 @@
+/usr/bin/rq		--	gen_context(system_u:object_r:pulp_rq_exec_t,s0)
+/bin/rq		--	gen_context(system_u:object_r:pulp_rq_exec_t,s0)
