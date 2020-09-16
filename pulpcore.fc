@@ -1,16 +1,20 @@
-/usr/lib/pulp/bin/gunicorn		--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
+/usr/bin/rq		--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
+/usr/bin/gunicorn	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
+
+/usr/libexec/pulpcore/.*	--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
+
+/usr/lib/pulp/bin/gunicorn	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
 /usr/lib/pulp/bin/rq		--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
 
-/usr/local/lib/pulp/bin/gunicorn		--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
+/usr/local/lib/pulp/bin/gunicorn	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
 /usr/local/lib/pulp/bin/rq		--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
 
 /var/lib/pulp/artifact(/.*)? 	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/assets(/.*)? 	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
+/var/lib/pulp/devel(/.*)? 	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/tmp(/.*)? 	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/upload(/.*)? 	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
+/var/lib/pulp/sign-metadata.sh	--	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 
-/var/run/pulpcore*(/.*)? 	gen_context(system_u:object_r:pulpcore_var_run_t,s0)
-/var/run/pulpcore-api(/.*)? 	gen_context(system_u:object_r:pulpcore_var_run_t,s0)
-/var/run/pulpcore-content(/.*)? 	gen_context(system_u:object_r:pulpcore_var_run_t,s0)
-/var/run/pulpcore-resource-manager(/.*)? 	gen_context(system_u:object_r:pulpcore_var_run_t,s0)
-/var/run/pulpcore-resource-worker[0-9]*(/.*)? 	gen_context(system_u:object_r:pulpcore_var_run_t,s0)
+/var/run/pulpcore-content(/.*)? 	gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
+/var/run/pulpcore.*		 	gen_context(system_u:object_r:pulpcore_var_run_t,s0)

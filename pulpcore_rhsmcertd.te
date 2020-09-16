@@ -1,0 +1,8 @@
+policy_module(pulpcore_rhsmcertd, 1.0)
+
+gen_require(`
+	type pulpcore_server_t, rhsmcertd_config_t;
+')
+
+allow pulpcore_server_t rhsmcertd_config_t:dir search_dir_perms;
+allow pulpcore_server_t rhsmcertd_config_t:file read_file_perms;
