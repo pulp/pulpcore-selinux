@@ -1,0 +1,1 @@
+semanage port -a -t pulpcore_port_t -p tcp 24816-24817

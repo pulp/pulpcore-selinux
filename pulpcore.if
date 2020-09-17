@@ -1,4 +1,29 @@
 ## <summary>Platform for managing repositories of software packages</summary>
+#
+#########################################
+## <summary>
+##	Transition to pulpcore named content
+## </summary>
+## <param name="domain">
+##	<summary>
+##      Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`pulpcore_filetrans_named_content',`
+	gen_require(`
+		type pulpcore_var_run_t, pulpcore_server_var_run_t;
+	')
+
+	files_pid_filetrans($1, pulpcore_server_var_run_t, { dir }, "pulpcore-content")
+	files_pid_filetrans($1, pulpcore_var_run_t, { dir }, "pulpcore-api")
+	files_pid_filetrans($1, pulpcore_var_run_t, { dir }, "resource-manager")
+	files_pid_filetrans($1, pulpcore_var_run_t, { dir }, "resource-worker-0")
+	files_pid_filetrans($1, pulpcore_var_run_t, { dir }, "resource-worker-1")
+')
+
+########################################
+
 
 ########################################
 ## <summary>
@@ -17,6 +42,27 @@ interface(`corenet_tcp_bind_pulpcore_port',`
 	')
 
 	allow $1 pulpcore_port_t:tcp_socket name_bind;
+
+')
+
+
+########################################
+## <summary>
+##	Connect TCP sockets to the pulp port.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+## <infoflow type="none"/>
+#
+interface(`corenet_tcp_connect_pulpcore_port',`
+	gen_require(`
+		type pulpcore_port_t;
+	')
+
+	allow $1 pulpcore_port_t:tcp_socket name_connect;
 	
 ')
 
