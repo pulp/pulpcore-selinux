@@ -17,6 +17,9 @@ init_daemon_domain(pulpcore_server_t, pulpcore_server_exec_t)
 init_nnp_daemon_domain(pulpcore_server_t)
 permissive pulpcore_server_t;
 
+type pulpcore_etc_t;
+files_config_file(pulpcore_etc_t)
+
 type pulpcore_var_lib_t;
 files_type(pulpcore_var_lib_t)
 type pulpcore_server_var_lib_t;
