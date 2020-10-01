@@ -1,0 +1,22 @@
+name: Build policies
+on:
+  - pull_request
+  - push
+jobs:
+  centos:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ["7", "8"]
+    container:
+      image: centos:${{ matrix.centos }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install packages
+        run: yum install -y selinux-policy-devel policycoreutils
+      - name: Build policies
+        run: |
+          make -f /usr/share/selinux/devel/Makefile pulpcore_port.pp
+          make -f /usr/share/selinux/devel/Makefile pulpcore.pp
+          make -f /usr/share/selinux/devel/Makefile pulpcore_rhsmcertd.pp
