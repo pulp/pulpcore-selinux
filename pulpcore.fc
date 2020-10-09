@@ -17,7 +17,7 @@
 /usr/local/lib/pulp/bin/gunicorn	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
 /usr/local/lib/pulp/bin/rq		--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
 
-/var/lib/pulp/artifact(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
+/var/lib/pulp/(media|artifact)(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/assets(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/devel(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/tmp(/.*)?		gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
