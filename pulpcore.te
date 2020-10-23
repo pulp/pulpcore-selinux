@@ -74,11 +74,12 @@ write_sock_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 # /run
 manage_dirs_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
 manage_files_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
-files_pid_filetrans(pulpcore_t, pulpcore_var_run_t, { file dir })
+files_pid_filetrans(pulpcore_t, pulpcore_var_run_t, { dir file sock_file})
 
 manage_dirs_pattern(pulpcore_server_t, pulpcore_server_var_run_t, pulpcore_server_var_run_t)
 manage_files_pattern(pulpcore_server_t, pulpcore_server_var_run_t, pulpcore_server_var_run_t)
-files_pid_filetrans(pulpcore_server_t, pulpcore_server_var_run_t, { file dir })
+manage_sock_files_pattern(pulpcore_server_t, pulpcore_server_var_run_t, pulpcore_server_var_run_t)
+files_pid_filetrans(pulpcore_server_t, pulpcore_server_var_run_t, { dir file sock_file})
 
 # /tmp
 manage_dirs_pattern(pulpcore_t, pulpcore_tmp_t, pulpcore_tmp_t)
@@ -96,6 +97,9 @@ fs_tmpfs_filetrans(pulpcore_t, pulpcore_server_tmpfs_t, file )
 allow pulpcore_t pulpcore_server_tmpfs_t:file map;
 
 # interface calls
+kernel_read_all_proc(pulpcore_t)
+kernel_read_all_proc(pulpcore_server_t)
+
 auth_use_nsswitch(pulpcore_server_t)
 auth_use_nsswitch(pulpcore_t)
 
@@ -136,6 +140,36 @@ optional_policy(`
 ')
 
 optional_policy(`
+	postgresql_stream_connect(pulpcore_t)
+	postgresql_stream_connect(pulpcore_server_t)
+')
+
+optional_policy(`
+	redis_stream_connect(pulpcore_t)
+	redis_stream_connect(pulpcore_server_t)
+')
+
+optional_policy(`
 	unconfined_stream_connect(pulpcore_t)
 ')
 
+########################################
+#
+# Local policy for external domains
+#
+
+optional_policy(`
+	gen_require(`
+		type httpd_t;
+	')
+
+	pulpcore_server_stream_connect(httpd_t)
+')
+
+optional_policy(`
+	gen_require(`
+		type init_t;
+	')
+
+	pulpcore_filetrans_named_content(init_t)
+')
