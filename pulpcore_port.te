@@ -1,4 +1,4 @@
-policy_module(pulpcore_port, 1.1.4)
+policy_module(pulpcore_port, 1.1.5)
 
 gen_require(`
     attribute port_type;
