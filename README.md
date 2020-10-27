@@ -41,3 +41,9 @@ semodule -r pulpcore_rhsmcertd
 semodule -r pulpcore
 semodule -r pulpcore_port
 ```
+
+# Development
+
+## Release Process
+
+See the [Release Guide](RELEASING.md)
