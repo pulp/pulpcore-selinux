@@ -17,6 +17,7 @@
 /var/lib/pulp/(media|artifact)(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/assets(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/devel(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
+/var/lib/pulp/pulpcore_static(/.*)? 	gen_context(system_u:object_r:httpd_sys_content_t,s0)
 /var/lib/pulp/tmp(/.*)?		gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/upload(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/sign-metadata.sh	--	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
