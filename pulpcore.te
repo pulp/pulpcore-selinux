@@ -58,6 +58,7 @@ read_files_pattern(pulpcore_server_t, pulpcore_etc_t, pulpcore_etc_t)
 # /var/lib
 manage_dirs_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 manage_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+manage_lnk_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 
 manage_dirs_pattern(pulpcore_server_t, pulpcore_server_var_lib_t, pulpcore_server_var_lib_t)
 manage_files_pattern(pulpcore_server_t, pulpcore_server_var_lib_t, pulpcore_server_var_lib_t)
