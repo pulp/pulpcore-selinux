@@ -24,4 +24,5 @@
 
 /var/run/pulpcore-api(/.*)?		gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
 /var/run/pulpcore-content(/.*)?		gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
+/var/run/pulpcore-(api|content)\.sock	gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
 /var/run/pulpcore.*			gen_context(system_u:object_r:pulpcore_var_run_t,s0)
