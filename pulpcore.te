@@ -127,6 +127,9 @@ fs_getattr_xattr_fs(pulpcore_server_t)
 libs_exec_ldconfig(pulpcore_t)
 libs_exec_ldconfig(pulpcore_server_t)
 
+# Needed for systemd Type=notify support
+init_write_pid_socket(pulpcore_server_t)
+
 miscfiles_read_generic_certs(pulpcore_t)
 
 sysnet_read_config(pulpcore_t)
