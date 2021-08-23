@@ -98,6 +98,10 @@ fs_tmpfs_filetrans(pulpcore_t, pulpcore_server_tmpfs_t, file )
 allow pulpcore_t pulpcore_server_tmpfs_t:file map;
 
 # interface calls
+
+# Needed for systemd Type=notify support
+kernel_dgram_send(pulpcore_server_t)
+
 kernel_read_all_proc(pulpcore_t)
 kernel_read_all_proc(pulpcore_server_t)
 
@@ -129,6 +133,9 @@ libs_exec_ldconfig(pulpcore_server_t)
 
 # Needed for systemd Type=notify support
 init_write_pid_socket(pulpcore_server_t)
+allow pulpcore_server_t init_var_run_t:unix_dgram_socket { connect create };
+allow pulpcore_server_t self:unix_dgram_socket { connect create };
+allow kernel_t init_var_run_t:unix_dgram_socket sendto;
 
 miscfiles_read_generic_certs(pulpcore_t)
 
