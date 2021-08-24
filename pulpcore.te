@@ -1,5 +1,10 @@
 policy_module(pulpcore, 1.2.4)
 
+require {
+	type httpd_config_t;
+	class dir search;
+}
+
 ########################################
 #
 # Declarations
@@ -140,6 +145,10 @@ allow kernel_t init_var_run_t:unix_dgram_socket sendto;
 miscfiles_read_generic_certs(pulpcore_t)
 
 sysnet_read_config(pulpcore_t)
+
+# Attempts to read the non-existent /etc/httpd/mime.types with Katello on EL7
+# Occurs whenever mailcap isn't installed, which would provide /etc/mime.types
+dontaudit pulpcore_server_t httpd_config_t:dir search;
 
 optional_policy(`
         gpg_exec(pulpcore_t)
