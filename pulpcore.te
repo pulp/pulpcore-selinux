@@ -1,4 +1,9 @@
-policy_module(pulpcore, 1.2.4)
+policy_module(pulpcore, 1.2.5)
+
+require {
+	type httpd_config_t;
+	class dir search;
+}
 
 ########################################
 #
@@ -98,6 +103,10 @@ fs_tmpfs_filetrans(pulpcore_t, pulpcore_server_tmpfs_t, file )
 allow pulpcore_t pulpcore_server_tmpfs_t:file map;
 
 # interface calls
+
+# Needed for systemd Type=notify support
+kernel_dgram_send(pulpcore_server_t)
+
 kernel_read_all_proc(pulpcore_t)
 kernel_read_all_proc(pulpcore_server_t)
 
@@ -129,10 +138,17 @@ libs_exec_ldconfig(pulpcore_server_t)
 
 # Needed for systemd Type=notify support
 init_write_pid_socket(pulpcore_server_t)
+allow pulpcore_server_t init_var_run_t:unix_dgram_socket { connect create };
+allow pulpcore_server_t self:unix_dgram_socket { connect create };
+allow kernel_t init_var_run_t:unix_dgram_socket sendto;
 
 miscfiles_read_generic_certs(pulpcore_t)
 
 sysnet_read_config(pulpcore_t)
+
+# Attempts to read the non-existent /etc/httpd/mime.types with Katello on EL7
+# Occurs whenever mailcap isn't installed, which would provide /etc/mime.types
+dontaudit pulpcore_server_t httpd_config_t:dir search;
 
 optional_policy(`
         gpg_exec(pulpcore_t)
