@@ -105,6 +105,8 @@ allow pulpcore_t pulpcore_server_tmpfs_t:file map;
 # interface calls
 
 # Needed for systemd Type=notify support
+# Needed when /run/systemd/notify is not appropriately labelled (at least on
+# EL7) as kernel_t rather than init_var_run_t
 kernel_dgram_send(pulpcore_server_t)
 
 kernel_read_all_proc(pulpcore_t)
@@ -136,10 +138,14 @@ fs_getattr_xattr_fs(pulpcore_server_t)
 libs_exec_ldconfig(pulpcore_t)
 libs_exec_ldconfig(pulpcore_server_t)
 
-# Needed for systemd Type=notify support
+# Block needed for systemd Type=notify support
 init_write_pid_socket(pulpcore_server_t)
+# This line is used when /run/systemd/notify is appropriately labelled
 allow pulpcore_server_t init_var_run_t:unix_dgram_socket { connect create };
 allow pulpcore_server_t self:unix_dgram_socket { connect create };
+# This line is used when /run/systemd/notify is appropriately labelled
+# Need verification that it is actually needed though. I think I observed
+# it on a test EL7 system after fixing the labelling.
 allow kernel_t init_var_run_t:unix_dgram_socket sendto;
 
 miscfiles_read_generic_certs(pulpcore_t)
