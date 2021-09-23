@@ -112,6 +112,25 @@ kernel_dgram_send(pulpcore_server_t)
 kernel_read_all_proc(pulpcore_t)
 kernel_read_all_proc(pulpcore_server_t)
 
+# pulp-2to3-migration plugin
+apache_manage_sys_content_rw(pulpcore_t)
+apache_read_sys_content_rw_files(pulpcore_t)
+
+# Not needed during migration, but if a user accesses a migrated on-demand repo
+# and therefore causes Pulp to download content, pulpcore-content < 3.15.0
+# writes the file to /var/lib/pulp/ with the httpd_sys_rw_content_t label.
+# And then the file inherits the httpd_sys_rw_content_t label.
+# So remove this line once the policy no longer supports pulpcore < 3.15.0
+# https://pulp.plan.io/issues/9000
+apache_manage_sys_content_rw(pulpcore_server_t)
+
+# pulp-2to3-migration plugin
+apache_read_sys_content_rw_dirs(pulpcore_server_t)
+
+# Not needed during migration, but if hardlinked content is read by
+# pulpcore-content after migration, it can still have the old label.
+apache_read_sys_content_rw_files(pulpcore_server_t)
+
 auth_use_nsswitch(pulpcore_server_t)
 auth_use_nsswitch(pulpcore_t)
 
@@ -122,12 +141,15 @@ corecmd_exec_shell(pulpcore_t)
 corecmd_exec_bin(pulpcore_server_t)
 corecmd_exec_shell(pulpcore_server_t)
 
+# mongod for pulp-2to3-migration plugin
 corenet_tcp_connect_http_port(pulpcore_t)
+corenet_tcp_connect_mongod_port(pulpcore_t)
 corenet_tcp_connect_postgresql_port(pulpcore_t)
 corenet_tcp_connect_pulpcore_port(pulpcore_t)
 corenet_tcp_connect_redis_port(pulpcore_t)
 corenet_tcp_bind_pulpcore_port(pulpcore_server_t)
 corenet_tcp_connect_http_port(pulpcore_server_t)
+corenet_tcp_connect_mongod_port(pulpcore_server_t)
 corenet_tcp_connect_postgresql_port(pulpcore_server_t)
 corenet_tcp_connect_redis_port(pulpcore_server_t)
 
