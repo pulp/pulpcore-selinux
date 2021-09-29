@@ -1,4 +1,4 @@
-policy_module(pulpcore, 1.2.5)
+policy_module(pulpcore, 1.2.6)
 
 require {
 	type httpd_config_t;
@@ -105,10 +105,31 @@ allow pulpcore_t pulpcore_server_tmpfs_t:file map;
 # interface calls
 
 # Needed for systemd Type=notify support
+# Needed when /run/systemd/notify is not appropriately labelled (at least on
+# EL7) as kernel_t rather than init_var_run_t
 kernel_dgram_send(pulpcore_server_t)
 
 kernel_read_all_proc(pulpcore_t)
 kernel_read_all_proc(pulpcore_server_t)
+
+# pulp-2to3-migration plugin
+apache_manage_sys_content_rw(pulpcore_t)
+apache_read_sys_content_rw_files(pulpcore_t)
+
+# Not needed during migration, but if a user accesses a migrated on-demand repo
+# and therefore causes Pulp to download content, pulpcore-content < 3.15.0
+# writes the file to /var/lib/pulp/ with the httpd_sys_rw_content_t label.
+# And then the file inherits the httpd_sys_rw_content_t label.
+# So remove this line once the policy no longer supports pulpcore < 3.15.0
+# https://pulp.plan.io/issues/9000
+apache_manage_sys_content_rw(pulpcore_server_t)
+
+# pulp-2to3-migration plugin
+apache_read_sys_content_rw_dirs(pulpcore_server_t)
+
+# Not needed during migration, but if hardlinked content is read by
+# pulpcore-content after migration, it can still have the old label.
+apache_read_sys_content_rw_files(pulpcore_server_t)
 
 auth_use_nsswitch(pulpcore_server_t)
 auth_use_nsswitch(pulpcore_t)
@@ -120,12 +141,15 @@ corecmd_exec_shell(pulpcore_t)
 corecmd_exec_bin(pulpcore_server_t)
 corecmd_exec_shell(pulpcore_server_t)
 
+# mongod for pulp-2to3-migration plugin
 corenet_tcp_connect_http_port(pulpcore_t)
+corenet_tcp_connect_mongod_port(pulpcore_t)
 corenet_tcp_connect_postgresql_port(pulpcore_t)
 corenet_tcp_connect_pulpcore_port(pulpcore_t)
 corenet_tcp_connect_redis_port(pulpcore_t)
 corenet_tcp_bind_pulpcore_port(pulpcore_server_t)
 corenet_tcp_connect_http_port(pulpcore_server_t)
+corenet_tcp_connect_mongod_port(pulpcore_server_t)
 corenet_tcp_connect_postgresql_port(pulpcore_server_t)
 corenet_tcp_connect_redis_port(pulpcore_server_t)
 
@@ -136,10 +160,14 @@ fs_getattr_xattr_fs(pulpcore_server_t)
 libs_exec_ldconfig(pulpcore_t)
 libs_exec_ldconfig(pulpcore_server_t)
 
-# Needed for systemd Type=notify support
+# Block needed for systemd Type=notify support
 init_write_pid_socket(pulpcore_server_t)
+# This line is used when /run/systemd/notify is appropriately labelled
 allow pulpcore_server_t init_var_run_t:unix_dgram_socket { connect create };
 allow pulpcore_server_t self:unix_dgram_socket { connect create };
+# This line is used when /run/systemd/notify is appropriately labelled
+# Need verification that it is actually needed though. I think I observed
+# it on a test EL7 system after fixing the labelling.
 allow kernel_t init_var_run_t:unix_dgram_socket sendto;
 
 miscfiles_read_generic_certs(pulpcore_t)
