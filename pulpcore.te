@@ -142,6 +142,7 @@ corecmd_exec_bin(pulpcore_server_t)
 corecmd_exec_shell(pulpcore_server_t)
 
 # mongod for pulp-2to3-migration plugin
+corenet_tcp_connect_http_cache_port(pulpcore_t)
 corenet_tcp_connect_http_port(pulpcore_t)
 corenet_tcp_connect_mongod_port(pulpcore_t)
 corenet_tcp_connect_postgresql_port(pulpcore_t)
