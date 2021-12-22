@@ -1,4 +1,4 @@
-policy_module(pulpcore, 1.2.7)
+policy_module(pulpcore, 1.2.8)
 
 require {
 	type httpd_config_t;
