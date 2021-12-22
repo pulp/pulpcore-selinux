@@ -52,7 +52,7 @@ If any of the remote repos you are trying to connect to are hosted on non-standa
 HTTP/HTTPS ports, you can configure Pulp to be able to talk to them like in the following example
 for port `10011`.
 
-`sudo semanage port -a  -t http_port_t -p tcp 10011`
+`sudo semanage port -a -t http_port_t -p tcp 10011`
 
 ## Adding support for proxy servers running on custom ports
 
@@ -62,7 +62,16 @@ If Pulp is configured to use a proxy server (in order to talk to remote repos), 
 server is on a non-standard port, you can configure Pulp to be able to talk to them like in the
 following example for port `10012`.
 
-`sudo semanage port -a  -t http_cache_port_t -p tcp 10012`
+`sudo semanage port -a -t http_cache_port_t -p tcp 10012`
+
+**NOTE**: If you get the following error:
+
+`ValueError: Port tcp/10012 already defined`
+
+That means that the port number is already labelled for some other purpose by SELinux. No change was
+made to your system. Run this command instead (substitute `http_port_t` for remote repos):
+
+`sudo semanage port -m -t http_cache_port_t -p tcp 10012`
 
 **NOTE**: Technically Pulp can talk to any remote repo or proxy server running on any SELinux-recognized
 ports for web servers or for proxy servers. (They are effectively one cumulative list.)
