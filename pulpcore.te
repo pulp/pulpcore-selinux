@@ -185,7 +185,14 @@ sysnet_read_config(pulpcore_t)
 
 # Attempts to read the non-existent /etc/httpd/mime.types with Katello on EL7
 # Occurs whenever mailcap isn't installed, which would provide /etc/mime.types
-dontaudit pulpcore_server_t httpd_config_t:dir search;
+# dontaudit pulpcore_server_t httpd_config_t:dir search;
+#
+# Instead of just doing that, we have this broader config to allow both pulp
+# contexts to be able to read the new pulp certs and keys under /etc/pulp/certs
+apache_search_config(pulpcore_t)
+apache_search_config(pulpcore_server_t)
+allow pulpcore_t httpd_config_t:dir read;
+allow pulpcore_server_t httpd_config_t:dir read;
 
 optional_policy(`
         gpg_exec(pulpcore_t)
