@@ -25,6 +25,9 @@ permissive pulpcore_server_t;
 type pulpcore_etc_t;
 files_config_file(pulpcore_etc_t)
 
+type pulpcore_log_t;
+logging_log_file(pulpcore_log_t)
+
 type pulpcore_var_lib_t;
 files_type(pulpcore_var_lib_t)
 type pulpcore_server_var_lib_t;
@@ -76,6 +79,10 @@ manage_dirs_pattern(pulpcore_server_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 manage_files_pattern(pulpcore_server_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 read_lnk_files_pattern(pulpcore_server_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 write_sock_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+
+# /var/log
+append_files_pattern(pulpcore_t, pulpcore_log_t, pulpcore_log_t)
+append_files_pattern(pulpcore_server_t, pulpcore_log_t, pulpcore_log_t)
 
 # /run
 manage_dirs_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)

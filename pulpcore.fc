@@ -25,6 +25,8 @@
 /var/lib/pulp/upload(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/sign-metadata.sh	--	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 
+/var/log/galaxy_api_access.log		gen_context(system_u:object_r:pulpcore_log_t,s0)
+
 /var/run/pulpcore-api(/.*)?		gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
 /var/run/pulpcore-content(/.*)?		gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
 /var/run/pulpcore-(api|content)\.sock	gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
