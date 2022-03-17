@@ -182,6 +182,7 @@ dontaudit pulpcore_server_t httpd_config_t:dir search;
 
 optional_policy(`
         gpg_exec(pulpcore_t)
+        gpg_exec(pulpcore_server_t)
 ')
 
 optional_policy(`
