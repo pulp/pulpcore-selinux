@@ -1,6 +1,7 @@
 # label for both nginx & apache
 /etc/pulp/certs(/.*)?			gen_context(system_u:object_r:httpd_config_t,s0)
 
+/etc/pulp/certs/database_fields.symmetric.key	gen_context(system_u:object_r:pulpcore_etc_t,s0)
 /etc/pulp/certs/galaxy_signing_service.*	gen_context(system_u:object_r:pulpcore_etc_t,s0)
 /etc/pulp/certs/token_private_key.pem		gen_context(system_u:object_r:pulpcore_etc_t,s0)
 /etc/pulp/certs/token_public_key.pem		gen_context(system_u:object_r:pulpcore_etc_t,s0)
