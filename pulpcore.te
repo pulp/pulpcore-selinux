@@ -1,4 +1,4 @@
-policy_module(pulpcore, 1.2.8)
+policy_module(pulpcore, 1.3.0)
 
 require {
 	type httpd_config_t;
@@ -24,6 +24,9 @@ permissive pulpcore_server_t;
 
 type pulpcore_etc_t;
 files_config_file(pulpcore_etc_t)
+
+type pulpcore_log_t;
+logging_log_file(pulpcore_log_t)
 
 type pulpcore_var_lib_t;
 files_type(pulpcore_var_lib_t)
@@ -76,6 +79,10 @@ manage_dirs_pattern(pulpcore_server_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 manage_files_pattern(pulpcore_server_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 read_lnk_files_pattern(pulpcore_server_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
 write_sock_files_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
+
+# /var/log
+append_files_pattern(pulpcore_t, pulpcore_log_t, pulpcore_log_t)
+append_files_pattern(pulpcore_server_t, pulpcore_log_t, pulpcore_log_t)
 
 # /run
 manage_dirs_pattern(pulpcore_t, pulpcore_var_run_t, pulpcore_var_run_t)
@@ -178,10 +185,18 @@ sysnet_read_config(pulpcore_t)
 
 # Attempts to read the non-existent /etc/httpd/mime.types with Katello on EL7
 # Occurs whenever mailcap isn't installed, which would provide /etc/mime.types
-dontaudit pulpcore_server_t httpd_config_t:dir search;
+# dontaudit pulpcore_server_t httpd_config_t:dir search;
+#
+# Instead of just doing that, we have this broader config to allow both pulp
+# contexts to be able to read the new pulp certs and keys under /etc/pulp/certs
+apache_search_config(pulpcore_t)
+apache_search_config(pulpcore_server_t)
+allow pulpcore_t httpd_config_t:dir read;
+allow pulpcore_server_t httpd_config_t:dir read;
 
 optional_policy(`
         gpg_exec(pulpcore_t)
+        gpg_exec(pulpcore_server_t)
 ')
 
 optional_policy(`

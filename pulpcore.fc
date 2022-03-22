@@ -1,12 +1,11 @@
 # label for both nginx & apache
 /etc/pulp/certs(/.*)?			gen_context(system_u:object_r:httpd_config_t,s0)
+
+/etc/pulp/certs/database_fields.symmetric.key	gen_context(system_u:object_r:pulpcore_etc_t,s0)
+/etc/pulp/certs/galaxy_signing_service.*	gen_context(system_u:object_r:pulpcore_etc_t,s0)
+/etc/pulp/certs/token_private_key.pem		gen_context(system_u:object_r:pulpcore_etc_t,s0)
+/etc/pulp/certs/token_public_key.pem		gen_context(system_u:object_r:pulpcore_etc_t,s0)
 /etc/pulp/settings.py			gen_context(system_u:object_r:pulpcore_etc_t,s0)
-/etc/pulp/token_private_key.pem			gen_context(system_u:object_r:pulpcore_etc_t,s0)
-/etc/pulp/token_public_key.pem			gen_context(system_u:object_r:pulpcore_etc_t,s0)
-# The installer prior to 2020-08-20 used these 2 token paths. Clean up once dev
-# instance is deleted.
-/etc/pulp/private_key.pem			gen_context(system_u:object_r:pulpcore_etc_t,s0)
-/etc/pulp/public_key.pem			gen_context(system_u:object_r:pulpcore_etc_t,s0)
 
 /usr/libexec/pulpcore/.*	--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
 /usr/libexec/pulpcore/gunicorn	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
@@ -23,6 +22,8 @@
 /var/lib/pulp/tmp(/.*)?		gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/upload(/.*)?	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
 /var/lib/pulp/sign-metadata.sh	--	gen_context(system_u:object_r:pulpcore_var_lib_t,s0)
+
+/var/log/galaxy_api_access.log		gen_context(system_u:object_r:pulpcore_log_t,s0)
 
 /var/run/pulpcore-api(/.*)?		gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
 /var/run/pulpcore-content(/.*)?		gen_context(system_u:object_r:pulpcore_server_var_run_t,s0)
