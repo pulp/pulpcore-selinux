@@ -194,6 +194,9 @@ apache_search_config(pulpcore_server_t)
 allow pulpcore_t httpd_config_t:dir read;
 allow pulpcore_server_t httpd_config_t:dir read;
 
+# This allows API/Content to read the kernel keyring for the worker process.
+allow pulpcore_server_t pulpcore_t:key { read view };
+
 optional_policy(`
         gpg_exec(pulpcore_t)
         gpg_exec(pulpcore_server_t)
