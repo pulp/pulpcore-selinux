@@ -196,6 +196,8 @@ allow pulpcore_server_t httpd_config_t:dir read;
 
 # This allows API/Content to read the kernel keyring for the worker process.
 allow pulpcore_server_t pulpcore_t:key { read view };
+# And the inverse.
+allow pulpcore_t pulpcore_server_t:key { read view };
 
 optional_policy(`
         gpg_exec(pulpcore_t)
