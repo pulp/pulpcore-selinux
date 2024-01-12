@@ -7,6 +7,9 @@
 /etc/pulp/certs/token_public_key.pem		gen_context(system_u:object_r:pulpcore_etc_t,s0)
 /etc/pulp/settings.py			gen_context(system_u:object_r:pulpcore_etc_t,s0)
 
+/usr/bin/pulpcore-(api|content)	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
+/usr/bin/pulpcore-worker	--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
+
 /usr/libexec/pulpcore/.*	--	gen_context(system_u:object_r:pulpcore_exec_t,s0)
 /usr/libexec/pulpcore/gunicorn	--	gen_context(system_u:object_r:pulpcore_server_exec_t,s0)
 
