@@ -1,4 +1,4 @@
-policy_module(pulpcore_rhsmcertd, 2.0.0)
+policy_module(pulpcore_rhsmcertd, 2.0.1)
 
 gen_require(`
 	type pulpcore_server_t, rhsmcertd_config_t;
