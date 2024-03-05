@@ -1,0 +1,5 @@
+*.pp
+pulpcore_port.fc
+pulpcore_port.if
+pulpcore_rhsmcertd.fc
+pulpcore_rhsmcertd.if
