@@ -11,7 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        centos: ["centos:7", "quay.io/centos/centos:stream8", "quay.io/centos/centos:stream9"]
+        centos:
+          - "quay.io/centos/centos:stream9"
     container:
       image: ${{ matrix.centos }}
     steps:
