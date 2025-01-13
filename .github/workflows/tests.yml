@@ -11,11 +11,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        centos: ["centos:7", "quay.io/centos/centos:stream8", "quay.io/centos/centos:stream9"]
+        centos:
+          - "quay.io/centos/centos:stream9"
     container:
       image: ${{ matrix.centos }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Install packages
         run: yum install -y selinux-policy-devel policycoreutils
       - name: Build policies
