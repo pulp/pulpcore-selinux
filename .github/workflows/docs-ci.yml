@@ -1,19 +1,69 @@
+---
 name: "Docs CI"
 
 on:
   workflow_call:
+    inputs:
+      pulpdocs_ref:
+        description: "Git reference of this workflow file. Must match the one used for the workflow call"
+        type: string
+        required: true
 
 jobs:
-  test:
-    runs-on: "ubuntu-20.04"
+  build:
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v4"
-      - name: "Set up Python"
-        uses: "actions/setup-python@v5"
+      - name: "Checkout pulp-docs repository"
+        uses: "actions/checkout@v4"
         with:
-          python-version: "3.11"
-      - name: "Install Test Dependencies"
+          repository: "pulp/pulp-docs"
+          path: "pulp-docs"
+          ref: "${{ inputs.pulpdocs_ref }}"
+          fetch-depth: 0
+
+      - name: "Checkout component repository"
+        if: "${{ github.event.repository.name != 'pulp-docs' }}"
+        uses: "actions/checkout@v4"
+        with:
+          path: "${{ github.event.repository.name }}"
+
+      - name: "Instructions to run locally"
         run: |
+          cat <<EOL
+          Ensure you have "pulp-docs" and "${{ github.event.repository.name }}" in your CWD with correct revisions:
+
+          git -C pulp-docs checkout "${{ inputs.pulpdocs_ref }}"
+          git -C ${{ github.event.repository.name }} checkout "${{ github.head_ref }}"
+
+          Then run:
+
+          cd pulp-docs
+          pulp-docs fetch --dest /tmp/pulp-docs-tmp
+          pulp-docs build --path pulp-docs@..:${{ github.event.repository.name }}@..:/tmp/pulp-docs-tmp
+          EOL
+
+      - uses: "actions/setup-python@v5"
+        with:
+          python-version: "3.12"
+
+      - name: "Install pulp-docs"
+        working-directory: "pulp-docs"
+        run: |
+          pip install --upgrade pip
           pip install -r doc_requirements.txt
-      - name: Build docs
-        run: make docs
+
+      - name: "Build Docs"
+        working-directory: "pulp-docs"
+        env:
+          DOCS_PATH: "pulp-docs@..:${{ github.event.repository.name }}@.."
+          DOCS_TMPDIR: "/tmp/pulp-docs-tmp"
+        run: |
+          pulp-docs fetch --path-exclude "$DOCS_PATH" --dest "$DOCS_TMPDIR"
+          pulp-docs build --path "$DOCS_PATH:$DOCS_TMPDIR"
+
+      - name: "Sanity Check"
+        working-directory: "pulp-docs"
+        run: |
+          echo "Checking that the namespace for the component under CI exists in the built docs."
+          ls "site/${{ github.event.repository.name }}/docs"
+...
