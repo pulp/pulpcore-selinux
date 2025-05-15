@@ -4,7 +4,7 @@ on:
   - push
 jobs:
   docs:
-    uses: "./.github/workflows/docs-ci.yml"
+    uses: "pedro-psb/.github/workflows/docs-ci.yml@update-ci-to-use-fetch"
 
   centos:
     runs-on: ubuntu-latest
