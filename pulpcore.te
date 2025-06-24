@@ -177,6 +177,11 @@ allow pulpcore_server_t pulpcore_t:key { read view };
 # And the inverse.
 allow pulpcore_t pulpcore_server_t:key { read view };
 
+# This allows libostree (as used by pulpcore-worker in pulpcore_t) to log
+kernel_dgram_send(pulpcore_t)
+logging_write_syslog_pid_socket(pulpcore_t)
+allow pulpcore_t self:unix_dgram_socket { create getopt setopt };
+
 optional_policy(`
         gpg_exec(pulpcore_t)
         gpg_exec(pulpcore_server_t)
