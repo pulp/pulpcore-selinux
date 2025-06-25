@@ -1,5 +1,9 @@
+include /usr/share/selinux/devel/Makefile
+
+build: pulpcore_port.pp pulpcore.pp pulpcore_rhsmcertd.pp ## Build SELinux policies
+
 help: ## Show this help.
-	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
+	@sed -ne '/@sed/!s/:.\+## /: /p' $(firstword $(MAKEFILE_LIST))
 
 docs: ## Build unified docs.
 	pulp-docs build
@@ -7,4 +11,4 @@ docs: ## Build unified docs.
 servedocs: ## Serves unified docs.
 	pulp-docs serve
 
-.PHONY: docs servedocs help
+.PHONY: build docs servedocs help

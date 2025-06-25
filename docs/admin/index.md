@@ -10,10 +10,7 @@ The SELinux policy for Pulp 3.Y releases.
 sudo yum install -y selinux-policy-devel policycoreutils
 git clone https://github.com/pulp/pulpcore-selinux
 cd pulpcore-selinux
-
-make -f /usr/share/selinux/devel/Makefile pulpcore_port.pp
-make -f /usr/share/selinux/devel/Makefile pulpcore.pp
-make -f /usr/share/selinux/devel/Makefile pulpcore_rhsmcertd.pp
+make build
 ```
 
 ### Installing

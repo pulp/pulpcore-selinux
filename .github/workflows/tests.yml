@@ -24,6 +24,4 @@ jobs:
         run: yum install -y selinux-policy-devel policycoreutils
       - name: Build policies
         run: |
-          make -f /usr/share/selinux/devel/Makefile pulpcore_port.pp
-          make -f /usr/share/selinux/devel/Makefile pulpcore.pp
-          make -f /usr/share/selinux/devel/Makefile pulpcore_rhsmcertd.pp
+          make build
