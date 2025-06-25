@@ -83,4 +83,4 @@ ports for web servers or for proxy servers. (They are effectively one cumulative
 
 ## Release Process
 
-See the [Release Guide](RELEASING.md)
+See the [Release Guide](docs/dev/guides/release.md)
