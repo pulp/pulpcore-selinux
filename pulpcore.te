@@ -2,6 +2,7 @@ policy_module(pulpcore, 2.1.0)
 
 require {
 	type httpd_config_t;
+	type etc_t;
 	class dir search;
 }
 
@@ -62,6 +63,9 @@ allow pulpcore_server_t self:udp_socket create_stream_socket_perms;
 # /etc
 read_files_pattern(pulpcore_t, pulpcore_etc_t, pulpcore_etc_t)
 read_files_pattern(pulpcore_server_t, pulpcore_etc_t, pulpcore_etc_t)
+
+# Allow pulpcore-worker to watch /etc directory for configuration changes
+allow pulpcore_t etc_t:dir watch;
 
 # /var/lib
 manage_dirs_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
