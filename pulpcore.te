@@ -64,8 +64,9 @@ allow pulpcore_server_t self:udp_socket create_stream_socket_perms;
 read_files_pattern(pulpcore_t, pulpcore_etc_t, pulpcore_etc_t)
 read_files_pattern(pulpcore_server_t, pulpcore_etc_t, pulpcore_etc_t)
 
-# Allow pulpcore-worker to watch /etc directory for configuration changes
-allow pulpcore_t etc_t:dir watch;
+# Allow aiodns/pycares (used by pulpcore) to watch /etc directory for resolver configuration changes
+files_watch_etc_dirs(pulpcore_t)
+files_watch_etc_dirs(pulpcore_server_t)
 
 # /var/lib
 manage_dirs_pattern(pulpcore_t, pulpcore_var_lib_t, pulpcore_var_lib_t)
