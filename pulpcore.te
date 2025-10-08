@@ -2,7 +2,6 @@ policy_module(pulpcore, 2.1.0)
 
 require {
 	type httpd_config_t;
-	type etc_t;
 	class dir search;
 }
 
